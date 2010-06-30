@@ -1,0 +1,8 @@
+case $dotfiles_env in
+  'local'  ) export EDITOR='mate -w';;
+  'remote' ) export EDITOR='nano';;
+esac
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH" # MacPorts
+export PATH="~/bin:$PATH"
+export PATH="/usr/local/git/bin:$PATH"
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH"

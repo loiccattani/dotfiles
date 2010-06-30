@@ -1,0 +1,69 @@
+# Theses aliases comes from different places on the web and personal additions.
+# Most of them are from some PeepCode Screencasts. (http://peepcode.com)
+
+# Utility
+case $dotfiles_env in
+  'local'  )
+    alias ea='mate -w ~/dotfiles/bash/aliases && source ~/dotfiles/bash/aliases'
+    alias ee='mate -w ~/dotfiles/bash/env && source ~/dotfiles/bash/env';;
+  'remote' )
+    alias ea='nano ~/dotfiles/bash/aliases && source ~/dotfiles/bash/aliases'
+    alias ee='nano ~/dotfiles/bash/env && source ~/dotfiles/bash/env';;
+esac
+function take () {
+  mkdir $1
+  cd $1
+}
+
+# Finder
+alias o='open . &'
+
+# Processes
+alias tu='top -o cpu' # cpu
+alias tm='top -o vsize' # memory
+
+# Git
+alias g='git status'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gc='git commit -v'
+alias gca='git commit -v -a'
+# Commit pending changes and quote all args as message like "gg Implemented new features and fixed bugs"
+function gg () {
+  git commit -v -a -m "$*"
+}
+alias gco='git checkout'
+alias gl='git pull'
+alias gp='git push'
+case $dotfiles_env in
+  'local'  )
+    alias gd='git diff | mate'
+    alias gdm='git diff master | mate'
+    alias gx='gitx --all';;
+  'remote' )
+    alias gd='git diff'
+    alias gdm='git diff master';;
+esac
+
+# Shortcuts to commands and builtins
+alias l='ls -la'
+alias ll='ls -laGh'
+alias ..='cd ..'
+
+# Rails
+alias ss='./script/server'
+alias sg='./script/generate'
+alias sc='./script/console'
+alias r='rake'
+alias rmig='rake db:migrate'
+
+# Dev prompt toggle. Toggles between standard PS1 and a colored, VCS aware prompt.
+function devp () {
+  if [[ -z $DEVP_PS1 ]]; then
+    DEVP_PS1=$PS1
+    PS1="\n\[$RED\]\u@\h:\W \[$YELLOW\]\$(vcprompt)\[$NO_COLOR\] \n\$ "
+  else
+    PS1=$DEVP_PS1
+    unset DEVP_PS1
+  fi
+}
