@@ -1,0 +1,75 @@
+#!/bin/bash
+# Dotfiles install script
+
+# Use this script to install the dotfiles either locally (default) or remotely to the given user and host.
+
+# Synopsis
+# install [-R [user@]host]
+
+while getopts "R:" Option
+do
+  case $Option in
+    R ) remote_host=$OPTARG;;   # Specify remote user and host
+    * ) echo "Usage: `basename $0` [-R [user@]host]";; # DEFAULT
+  esac
+done
+
+# Pre-install tests
+function do_preflight () {
+  echo 'Doing preflight tests...'
+  manifest=(~/bin ~/dotfiles ~/.bashrc ~/.bash_profile)
+  for file in ${manifest[@]}
+  do
+    if [[ -e $file ]]; then
+      echo "${file} exists"
+      preflight_failed=1
+    fi
+  done
+  
+  if [[ $preflight_failed ]]; then
+    echo "Install aborted!"
+    return 1
+  else
+    return 0
+  fi
+}
+
+# Local install
+function do_local_install () {
+  echo 'Copying dotfiles dir'
+  cp -R dotfiles ~/dotfiles
+  if [[ $? -gt 0 ]]; then
+    exit_with_error 'Error during copy of dotfiles dir'
+  fi
+  echo 'Copying bin dir'
+  cp -R bin ~/bin
+  if [[ $? -gt 0 ]]; then
+    exit_with_error 'Error during copy of bin dir'
+  fi
+  echo 'Symlinking .bash_profile'
+  ln -s ~/dotfiles/bash_profile ~/.bash_profile
+  if [[ $? -gt 0 ]]; then
+    exit_with_error 'Error during symlinking of .bash_profile'
+  fi
+  echo 'Symlinking .bashrc'
+  ln -s ~/dotfiles/bashrc ~/.bashrc
+  if [[ $? -gt 0 ]]; then
+    exit_with_error 'Error during symlinking of .bashrc'
+  fi
+  echo 'Dotfiles installed successfully!'
+}
+
+function exit_with_error () {
+  echo $1
+  echo 'Install failed!'
+  exit 1
+}
+
+# - - - - - - - - - - -
+
+do_preflight
+if [[ $? -eq 0 ]]; then
+  do_local_install
+fi
+
+exit 0
