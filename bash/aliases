@@ -16,6 +16,10 @@ function take () {
   mkdir $1
   cd $1
 }
+function reload () {
+  echo 'Reloading BASH environment'
+  source ~/.bashrc
+}
 
 # Finder
 alias o='open . &'

@@ -60,6 +60,11 @@ function do_local_install () {
   if [[ $? -gt 0 ]]; then
     exit_with_error 'Error symlinking .bashrc'
   fi
+  echo 'Loading BASH environment'
+  source ~/.bashrc
+  if [[ $? -gt 0 ]]; then
+    exit_with_error 'Error sourcing .bashrc'
+  fi
   echo 'Dotfiles installed successfully!'
 }
 
