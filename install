@@ -44,12 +44,12 @@ function do_local_install () {
     exit_with_error 'Error during copy vcprompt binary'
   fi
   echo 'Symlinking .bash_profile'
-  ln -s ~/dotfiles/bash_profile ~/.bash_profile
+  ln -s ~/.dotfiles/bash_profile ~/.bash_profile
   if [[ $? -gt 0 ]]; then
     exit_with_error 'Error during symlinking of .bash_profile'
   fi
   echo 'Symlinking .bashrc'
-  ln -s ~/dotfiles/bashrc ~/.bashrc
+  ln -s ~/.dotfiles/bashrc ~/.bashrc
   if [[ $? -gt 0 ]]; then
     exit_with_error 'Error during symlinking of .bashrc'
   fi

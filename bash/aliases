@@ -4,11 +4,13 @@
 # Utility
 case $dotfiles_env in
   'local'  )
-    alias ea='mate -w ~/bin/dotfiles/bash/aliases && source ~/bin/dotfiles/bash/aliases'
-    alias ee='mate -w ~/bin/dotfiles/bash/env && source ~/bin/dotfiles/bash/env';;
+    alias ea='mate -w ~/.dotfiles/bash/aliases && source ~/.dotfiles/bash/aliases'
+    alias ee='mate -w ~/.dotfiles/bash/env && source ~/.dotfiles/bash/env'
+  ;;
   'remote' )
-    alias ea='nano ~/bin/dotfiles/bash/aliases && source ~/bin/dotfiles/bash/aliases'
-    alias ee='nano ~/bin/dotfiles/bash/env && source ~/bin/dotfiles/bash/env';;
+    alias ea='nano ~/.dotfiles/bash/aliases && source ~/.dotfiles/bash/aliases'
+    alias ee='nano ~/.dotfiles/bash/env && source ~/.dotfiles/bash/env'
+  ;;
 esac
 function take () {
   mkdir $1
