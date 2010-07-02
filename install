@@ -29,7 +29,7 @@ function do_preflight () {
   done
   
   if [[ $preflight_failed ]]; then
-    echo "Install aborted!" # TODO: Use -f to force overwrite
+    echo "Install aborted!" # TODO: Use -f to force install while backuping old files
     return 1
   else
     return 0
