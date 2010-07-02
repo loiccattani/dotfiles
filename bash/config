@@ -1,5 +1,10 @@
 # Dotfiles environment
-dotfiles_env='remote' # To be manually set to 'local' for the main dev computer
+main_host='leela' # That's my main computer hostname, where i have TextMate and other GUIs installed. Aliases and other environment variables adapts to this.
+if [[ $HOSTNAME == $main_host ]]; then
+  dotfiles_env='local'
+else
+  dotfiles_env='remote'
+fi
 
 # Colors from http://wiki.archlinux.org/index.php/Color_Bash_Prompt
 # misc
