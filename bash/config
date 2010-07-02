@@ -41,5 +41,8 @@ BMAGENTA='\e[45m'
 BCYAN='\e[46m'
 BWHITE='\e[47m'
 
-# Prompt
-PS1="[\u@\h \W]\$ "
+# Prompts
+STD_PS1="[\u@\h \W]\$ "
+DEV_PS1="\n\[$RED\]\u@\h:\W \[$YELLOW\]\$(vcprompt)\[$NO_COLOR\] \n\$ "
+PS1=$STD_PS1
+CRNT_PS1='STD'
