@@ -19,7 +19,7 @@ done
 # Pre-install tests
 function do_preflight () {
   echo 'Doing preflight tests...'
-  manifest=(~/.bashrc ~/.bash_profile ~/bin/vcprompt)
+  manifest=(~/.bashrc ~/.bash_profile)
   for file in ${manifest[@]}
   do
     if [[ -e $file ]]; then
@@ -45,10 +45,14 @@ function do_local_install () {
       exit_with_error 'Error creating ~/bin directory'
     fi
   fi
-  echo 'Copying vcprompt binary to ~/bin'
-  cp bin/vcprompt ~/bin/vcprompt
-  if [[ $? -gt 0 ]]; then
-    exit_with_error 'Error copying vcprompt binary'
+  if [[ -e ~/bin/vcprompt ]]; then
+    echo 'Seems that vcprompt is already installed. Skipping'
+  else
+    echo 'Copying vcprompt binary to ~/bin'
+    cp bin/vcprompt ~/bin/vcprompt
+    if [[ $? -gt 0 ]]; then
+      exit_with_error 'Error copying vcprompt binary'
+    fi
   fi
   echo 'Symlinking .bash_profile'
   ln -s ~/.dotfiles/bash_profile ~/.bash_profile
