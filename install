@@ -8,17 +8,44 @@
 
 install_mode='local'
 
-while getopts "R:" Option
+while getopts "fR:" Option
 do
   case $Option in
+    f ) force_install=1;;  # Force install. (Do a backup of 'old' files before install)
     R ) install_mode='remote'; remote_host=$OPTARG;;   # Specify remote user and host
     * ) echo "Usage: `basename $0` [-R [user@]host]";; # DEFAULT
   esac
 done
 
-# Pre-install tests
+# Force install / Backup files
+function backup_files () {
+  echo 'Force install. Old files will be moved to ~/.dotfiles_bak'
+  if [[ ! -d ~/.dotfiles_bak ]]; then
+    echo 'Creating .dotfiles_bak directory'
+    mkdir ~/.dotfiles_bak
+    if [[ $? -gt 0 ]]; then
+      exit_with_error 'Error creating ~/.dotfiles_bak directory'
+    fi
+  fi
+  if [[ -e ~/.bashrc ]]; then
+    echo 'Backuping ~/.bashrc'
+    mv ~/.bashrc ~/.dotfiles_bak
+    if [[ $? -gt 0 ]]; then
+      exit_with_error 'Error moving ~/.bashrc to ~/.dotfiles_bak'
+    fi
+  fi
+  if [[ -e ~/.bash_profile ]]; then
+    echo 'Backuping ~/.bash_profile'
+    mv ~/.bash_profile ~/.dotfiles_bak
+    if [[ $? -gt 0 ]]; then
+      exit_with_error 'Error moving ~/.bash_profile to ~/.dotfiles_bak'
+    fi
+  fi
+}
+
+# Pre-install check
 function do_preflight () {
-  echo 'Doing preflight tests...'
+  echo 'Doing preflight check...'
   manifest=(~/.bashrc ~/.bash_profile)
   for file in ${manifest[@]}
   do
@@ -29,7 +56,8 @@ function do_preflight () {
   done
   
   if [[ $preflight_failed ]]; then
-    echo "Install aborted!" # TODO: Use -f to force install while backuping old files
+    echo 'Install aborted!'
+    echo 'Use ./install -f to force install. Old files will be backuped.'
     return 1
   else
     return 0
@@ -84,6 +112,9 @@ function exit_with_error () {
 
 case $install_mode in
   'local' )
+    if [[ $force_install -eq 1 ]]; then
+      backup_files
+    fi
     do_preflight
     if [[ $? -eq 0 ]]; then
       do_local_install
