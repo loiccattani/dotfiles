@@ -17,7 +17,7 @@ done
 # Pre-install tests
 function do_preflight () {
   echo 'Doing preflight tests...'
-  manifest=(~/bin ~/dotfiles ~/.bashrc ~/.bash_profile)
+  manifest=(~/bin/dotfiles ~/.bashrc ~/.bash_profile ~/bin/vcprompt)
   for file in ${manifest[@]}
   do
     if [[ -e $file ]]; then
@@ -27,7 +27,7 @@ function do_preflight () {
   done
   
   if [[ $preflight_failed ]]; then
-    echo "Install aborted!"
+    echo "Install aborted!" # TODO: Use -f to force overwrite
     return 1
   else
     return 0
@@ -36,15 +36,10 @@ function do_preflight () {
 
 # Local install
 function do_local_install () {
-  echo 'Copying dotfiles dir'
-  cp -R dotfiles ~/dotfiles
+  echo 'Copying vcprompt binary to ~/bin'
+  cp bin/vcprompt ~/bin/vcprompt
   if [[ $? -gt 0 ]]; then
-    exit_with_error 'Error during copy of dotfiles dir'
-  fi
-  echo 'Copying bin dir'
-  cp -R bin ~/bin
-  if [[ $? -gt 0 ]]; then
-    exit_with_error 'Error during copy of bin dir'
+    exit_with_error 'Error during copy vcprompt binary'
   fi
   echo 'Symlinking .bash_profile'
   ln -s ~/dotfiles/bash_profile ~/.bash_profile
