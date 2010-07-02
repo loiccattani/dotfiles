@@ -38,20 +38,27 @@ function do_preflight () {
 
 # Local install
 function do_local_install () {
+  if [[ ! -d ~/bin ]]; then
+    echo "Creating ~/bin directory"
+    mkdir ~/bin
+    if [[ $? -gt 0 ]]; then
+      exit_with_error 'Error creating ~/bin directory'
+    fi
+  fi
   echo 'Copying vcprompt binary to ~/bin'
   cp bin/vcprompt ~/bin/vcprompt
   if [[ $? -gt 0 ]]; then
-    exit_with_error 'Error during copy vcprompt binary'
+    exit_with_error 'Error copying vcprompt binary'
   fi
   echo 'Symlinking .bash_profile'
   ln -s ~/.dotfiles/bash_profile ~/.bash_profile
   if [[ $? -gt 0 ]]; then
-    exit_with_error 'Error during symlinking of .bash_profile'
+    exit_with_error 'Error symlinking .bash_profile'
   fi
   echo 'Symlinking .bashrc'
   ln -s ~/.dotfiles/bashrc ~/.bashrc
   if [[ $? -gt 0 ]]; then
-    exit_with_error 'Error during symlinking of .bashrc'
+    exit_with_error 'Error symlinking .bashrc'
   fi
   echo 'Dotfiles installed successfully!'
 }
