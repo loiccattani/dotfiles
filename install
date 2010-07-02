@@ -92,12 +92,13 @@ function do_local_install () {
   if [[ $? -gt 0 ]]; then
     exit_with_error 'Error symlinking .bashrc'
   fi
-  echo 'Loading BASH environment'
-  source ~/.bashrc
-  if [[ $? -gt 0 ]]; then
-    exit_with_error 'Error sourcing .bashrc'
-  fi
+  # echo 'Loading BASH environment'
+  # source ~/.bashrc # FIXME: Hey... you are loading that in the install script env. Not in the current user's shell.
+  # if [[ $? -gt 0 ]]; then
+  #   exit_with_error 'Error sourcing .bashrc'
+  # fi
   echo 'Dotfiles installed successfully!'
+  echo 'Now load your new environment with this command: $ source ~/.bashrc'
 }
 
 # TODO: Remote install script
