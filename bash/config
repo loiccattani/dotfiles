@@ -44,5 +44,12 @@ BWHITE='\e[47m'
 # Prompts
 STD_PS1="[\u@\h \W]\$ "
 DEV_PS1="\n\[$RED\]\u@\h:\W \[$YELLOW\]\$(vcprompt)\[$NO_COLOR\] \n\$ "
-PS1=$STD_PS1
-CRNT_PS1='STD'
+if [[ -z $CRNT_PS1 ]]; then
+  PS1=$STD_PS1
+  CRNT_PS1='STD'
+else
+  case $CRNT_PS1 in
+    'STD' ) PS1=$STD_PS1;;
+    'DEV' ) PS1=$DEV_PS1;;
+  esac
+fi
