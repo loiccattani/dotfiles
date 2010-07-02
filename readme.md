@@ -1,12 +1,9 @@
-# Dotfiles
+# Arko's Dotfiles
 
-My dotfiles
+My dotfiles. To bring a little piece of 127.0.0.1 to other places...
 
-# How to install?
+# How to Install
 
-The git repository should reside in ~/.dotfiles. This way, it can be updated or push changes to origin while sitting in the right place.
-
-1. Clone the git repository to ~/.dotfiles
-   `$ git clone git@github.com:Arko/dotfiles.git ~/.dotfiles`
-2. Run the install script  
-   `$ ~/.dotfiles/install`
+`git clone git@github.com:Arko/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+./install`
