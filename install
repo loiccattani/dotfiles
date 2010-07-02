@@ -6,10 +6,12 @@
 # Synopsis
 # install [-R [user@]host]
 
+install_mode='local'
+
 while getopts "R:" Option
 do
   case $Option in
-    R ) remote_host=$OPTARG;;   # Specify remote user and host
+    R ) install_mode='remote'; remote_host=$OPTARG;;   # Specify remote user and host
     * ) echo "Usage: `basename $0` [-R [user@]host]";; # DEFAULT
   esac
 done
@@ -54,6 +56,8 @@ function do_local_install () {
   echo 'Dotfiles installed successfully!'
 }
 
+# TODO: Remote install script
+
 function exit_with_error () {
   echo $1
   echo 'Install failed!'
@@ -62,9 +66,16 @@ function exit_with_error () {
 
 # - - - - - - - - - - -
 
-do_preflight
-if [[ $? -eq 0 ]]; then
-  do_local_install
-fi
+case $install_mode in
+  'local' )
+    do_preflight
+    if [[ $? -eq 0 ]]; then
+      do_local_install
+    fi
+  ;;
+  'remote' )
+    echo 'Not implemented yet'
+  ;;
+esac
 
 exit 0
