@@ -2,12 +2,9 @@ case $dotfiles_env in
   'local'  ) export EDITOR='mate -w';;
   'remote' ) export EDITOR='nano';;
 esac
-# Resetting the PATH to a fresh one (Don't forget it! TODO: Think about it)
-export PATH="/usr/bin:/bin:/usr/sbin:/sbin" # System binairies
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # User-installed binaries
-export PATH="/usr/X11/bin:$PATH" # X11
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH" # MacPorts
 export PATH="/usr/local/mysql/bin:$PATH" # MySQL
 export PATH="/usr/local/apache2/bin:$PATH" # Apache
 export PATH="/usr/local/git/bin:$PATH" # Git
-export PATH="/opt/local/bin:/opt/local/sbin:$PATH" # MacPorts
+export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # User-installed binaries
 export PATH="~/bin:$PATH" # User binaries
