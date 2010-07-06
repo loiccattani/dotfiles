@@ -65,8 +65,10 @@ alias rmig='rake db:migrate'
 
 # Dev prompt toggle. Toggles between standard PS1 and a colored, VCS aware prompt.
 function devp () {
-  case $CRNT_PS1 in
-    'STD' ) CRNT_PS1='DEV'; PS1=$DEV_PS1;;
-    'DEV' ) CRNT_PS1='STD'; PS1=$STD_PS1;;
-  esac
+  prompts=${#prompt[@]}
+  (( current_ps1++ ))
+  if [[ $current_ps1 -gt $prompts ]]; then
+    current_ps1=1
+  fi
+  PS1=${prompt[$current_ps1]}
 }
