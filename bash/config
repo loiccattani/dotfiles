@@ -1,11 +1,3 @@
-# Dotfiles environment
-main_host='leela' # That's my main computer hostname, where i have TextMate and other GUIs installed. Aliases and other environment variables adapts to this.
-if [[ $HOSTNAME == $main_host ]]; then
-  dotfiles_env='local'
-else
-  dotfiles_env='remote'
-fi
-
 # Colors from http://wiki.archlinux.org/index.php/Color_Bash_Prompt
 # misc
 NO_COLOR='\e[0m' #disable any colors
@@ -46,12 +38,13 @@ BMAGENTA='\e[45m'
 BCYAN='\e[46m'
 BWHITE='\e[47m'
 
-# Prompt colors
-prompt_color=$WHITE
-case $HOSTNAME in
-  'leela' ) prompt_color=$RED ;;
-  'com-www' ) prompt_color=$GREEN ;;
-esac
+# Prompt color
+prompt_color=$RED
+
+# Source local prompt color override if existing
+if [[ -e ~/.dotfiles/bash/prompt_color.local ]]; then
+  source ~/.dotfiles/bash/prompt_color.local
+fi
 
 # Prompts
 prompt[1]="\h:\W \u\$ " # Default prompt
@@ -59,11 +52,16 @@ prompt[2]="[\u@\h \W]\$ " # Standard prompt with more info
 # 3: Colored prompt with VCS/Branch information
 prompt[3]="\[$prompt_color\]\u@\h:\W \[$YELLOW\]\$(vcprompt)\[$NO_COLOR\] \n\$ "
 # 4: Colored prompt with VCS/Branch information. Blank line before.
-prompt[4]="\n\[$RED\]\u@\h:\W \[$YELLOW\]\$(vcprompt)\[$NO_COLOR\] \n\$ "
+prompt[4]="\n\[$prompt_color\]\u@\h:\W \[$YELLOW\]\$(vcprompt)\[$NO_COLOR\] \n\$ "
 default_prompt=3
 
+# Set prompt
 if [[ -z $current_ps1 ]]; then
   current_ps1=$default_prompt
 fi
-
 PS1=${prompt[$current_ps1]}
+
+# Source local config override if existing
+if [[ -e ~/.dotfiles/bash/config.local ]]; then
+  source ~/.dotfiles/bash/config.local
+fi

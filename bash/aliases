@@ -1,17 +1,11 @@
 # Theses aliases comes from different places on the web and personal additions.
-# Most of them are from some PeepCode Screencasts. (http://peepcode.com)
+# Most^H^H^H^HSome of them are from some PeepCode Screencasts. (http://peepcode.com)
 
 # Utility
-case $dotfiles_env in
-  'local'  )
-    alias ea='mate -w ~/.dotfiles/bash/aliases && source ~/.dotfiles/bash/aliases'
-    alias ee='mate -w ~/.dotfiles/bash/env && source ~/.dotfiles/bash/env'
-  ;;
-  'remote' )
-    alias ea='nano ~/.dotfiles/bash/aliases && source ~/.dotfiles/bash/aliases'
-    alias ee='nano ~/.dotfiles/bash/env && source ~/.dotfiles/bash/env'
-  ;;
-esac
+alias ea='nano ~/.dotfiles/bash/aliases && source ~/.dotfiles/bash/aliases'
+alias eal='nano ~/.dotfiles/bash/aliases.local && source ~/.dotfiles/bash/aliases.local'
+alias ee='nano ~/.dotfiles/bash/env && source ~/.dotfiles/bash/env'
+alias eel='nano ~/.dotfiles/bash/env.local && source ~/.dotfiles/bash/env.local'
 function take () {
   mkdir $1
   cd $1
@@ -41,15 +35,8 @@ function gg () {
 alias gco='git checkout'
 alias gl='git pull'
 alias gp='git push'
-case $dotfiles_env in
-  'local'  )
-    alias gd='git diff | mate'
-    alias gdm='git diff master | mate'
-    alias gx='gitx --all';;
-  'remote' )
-    alias gd='git diff'
-    alias gdm='git diff master';;
-esac
+alias gd='git diff'
+alias gdm='git diff master'
 
 # Shortcuts to commands and builtins
 alias l='ls -la'
@@ -72,3 +59,15 @@ function devp () {
   fi
   PS1=${prompt[$current_ps1]}
 }
+
+# Change prompt color locally
+function prompt_color () {
+  read -p "Choose color (All caps): " result
+  echo "prompt_color=\$${result}" > ~/.dotfiles/bash/prompt_color.local
+  reload
+}
+
+# Source local aliases override if existing
+if [[ -e ~/.dotfiles/bash/aliases.local ]]; then
+  source ~/.dotfiles/bash/aliases.local
+fi

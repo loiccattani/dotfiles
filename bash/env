@@ -1,10 +1,13 @@
-case $dotfiles_env in
-  'local'  ) export EDITOR='mate -w';;
-  'remote' ) export EDITOR='nano';;
-esac
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH" # MacPorts
 export PATH="/usr/local/mysql/bin:$PATH" # MySQL
 export PATH="/usr/local/apache2/bin:$PATH" # Apache
 export PATH="/usr/local/git/bin:$PATH" # Git
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # User-installed binaries
 export PATH="~/bin:$PATH" # User binaries
+
+export EDITOR='nano'
+
+# Source local env override if existing
+if [[ -e ~/.dotfiles/bash/env.local ]]; then
+  source ~/.dotfiles/bash/env.local
+fi
