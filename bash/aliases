@@ -37,6 +37,7 @@ alias gl='git pull'
 alias gp='git push'
 alias gd='git diff'
 alias gdm='git diff master'
+alias gi='git add -i'
 
 # Shortcuts to commands and builtins
 alias l='ls -la'
