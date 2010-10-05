@@ -49,7 +49,7 @@ fi
 # Prompts
 prompt[1]="\h:\W \u\$ " # Default prompt
 prompt[2]="[\u@\h \W]\$ " # Standard prompt with more info
-if [[ -e ~/.dotfiles/bin/vcprompt ]]; then # If vcprompt is installed, add it to the prompt
+if [[ -e ~/bin/vcprompt ]]; then # If vcprompt is installed, add it to the prompt
   # 3: Colored prompt with VCS/Branch information
   prompt[3]="\[$prompt_color\]\u@\h:\W \[$YELLOW\]\$(vcprompt)\[$NO_COLOR\] \n\$ "
   # 4: Colored prompt with VCS/Branch information. Blank line before.

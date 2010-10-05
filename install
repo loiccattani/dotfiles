@@ -73,7 +73,7 @@ function do_local_install () {
       exit_with_error 'Error creating ~/bin directory'
     fi
   fi
-  if [[ $(uname -p) -eq 'i386' ]]; then # Verify that arch is intel, then copy vcprompt. TODO: compile vcprompt for ppc
+  if [[ $(uname -p) == 'i386' ]]; then # Verify that arch is intel, then copy vcprompt. TODO: compile vcprompt for ppc
     if [[ -e ~/bin/vcprompt ]]; then
       echo 'Seems that vcprompt is already installed. Skipping'
     else
