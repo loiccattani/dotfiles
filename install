@@ -11,8 +11,8 @@ install_mode='local'
 while getopts "fR:" Option
 do
   case $Option in
-    f ) force_install=1;;  # Force install. (Do a backup of 'old' files before install)
-    R ) install_mode='remote'; remote_host=$OPTARG;;   # Specify remote user and host
+    f ) force_install=1;; # Force install. (Do a backup of 'old' files before install)
+    R ) install_mode='remote'; remote_host=$OPTARG;; # Specify remote user and host
     * ) echo "Usage: `basename $0` [-R [user@]host]";; # DEFAULT
   esac
 done
@@ -73,14 +73,18 @@ function do_local_install () {
       exit_with_error 'Error creating ~/bin directory'
     fi
   fi
-  if [[ -e ~/bin/vcprompt ]]; then
-    echo 'Seems that vcprompt is already installed. Skipping'
-  else
-    echo 'Copying vcprompt binary to ~/bin'
-    cp bin/vcprompt ~/bin/vcprompt
-    if [[ $? -gt 0 ]]; then
-      exit_with_error 'Error copying vcprompt binary'
+  if [[ $(uname -p) -eq 'i386' ]]; then # Verify that arch is intel, then copy vcprompt. TODO: compile vcprompt for ppc
+    if [[ -e ~/bin/vcprompt ]]; then
+      echo 'Seems that vcprompt is already installed. Skipping'
+    else
+      echo 'Copying vcprompt binary to ~/bin'
+      cp bin/vcprompt ~/bin/vcprompt
+      if [[ $? -gt 0 ]]; then
+        exit_with_error 'Error copying vcprompt binary'
+      fi
     fi
+  else
+    echo "Arch is not i386. Skipping vcprompt install"
   fi
   echo 'Symlinking .bash_profile'
   ln -s ~/.dotfiles/bash_profile ~/.bash_profile
