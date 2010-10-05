@@ -100,7 +100,13 @@ function do_local_install () {
   echo 'To load your new environment, use this command: $ source ~/.bashrc'
 }
 
-# TODO: Remote install script
+function do_remote_install () {
+  # TODO: copy files to remote host
+  # TODO: run install script remotely (Should pass local prefilght in all cases)
+  # TODO: See how we can make it with SSH Control Master
+  echo "Not implemented yet"
+}
+
 
 function exit_with_error () {
   echo $1
@@ -121,7 +127,11 @@ case $install_mode in
     fi
   ;;
   'remote' )
-    echo 'Not implemented yet'
+    # if [[ $force_install -eq 1 ]]; then
+    #   TODO: backup_remote_files
+    # fi
+    # TODO: do_remote_prefilght
+    do_remote_install
   ;;
 esac
 
