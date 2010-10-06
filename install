@@ -19,26 +19,43 @@ done
 
 # Force install / Backup files
 function backup_files () {
-  echo 'Force install. Old files will be moved to ~/.dotfiles_bak'
-  if [[ ! -d ~/.dotfiles_bak ]]; then
-    echo 'Creating .dotfiles_bak directory'
-    mkdir ~/.dotfiles_bak
+  timestamp=$(date +%s)
+  backup_dir=~/.dotfiles_bak_$timestamp
+  echo "Force install. Old files will be moved to ${backup_dir}"
+  
+  # Create backup dir
+  if [[ ! -d $backup_dir ]]; then
+    echo "Creating ${backup_dir} directory"
+    mkdir $backup_dir
     if [[ $? -gt 0 ]]; then
-      exit_with_error 'Error creating ~/.dotfiles_bak directory'
+      exit_with_error "Error creating ${backup_dir} directory"
     fi
   fi
+  
+  # Backup .bashrc
   if [[ -e ~/.bashrc ]]; then
     echo 'Backuping ~/.bashrc'
-    mv ~/.bashrc ~/.dotfiles_bak
+    mv ~/.bashrc $backup_dir
     if [[ $? -gt 0 ]]; then
-      exit_with_error 'Error moving ~/.bashrc to ~/.dotfiles_bak'
+      exit_with_error "Error moving ~/.bashrc to ${backup_dir}"
     fi
   fi
+  
+  # Backup .bash_profile
   if [[ -e ~/.bash_profile ]]; then
     echo 'Backuping ~/.bash_profile'
-    mv ~/.bash_profile ~/.dotfiles_bak
+    mv ~/.bash_profile $backup_dir
     if [[ $? -gt 0 ]]; then
-      exit_with_error 'Error moving ~/.bash_profile to ~/.dotfiles_bak'
+      exit_with_error "Error moving ~/.bash_profile to ${backup_dir}"
+    fi
+  fi
+  
+  # Backup .dotfiles only if install is run from other directory
+  if [[ $(pwd) != ~/.dotfiles && -d ~/.dotfiles ]]; then
+    echo 'Backuping ~/.dotfiles'
+    mv ~/.dotfiles $backup_dir
+    if [[ $? -gt 0 ]]; then
+      exit_with_error "Error moving ~/.dotfiles to ${backup_dir}"
     fi
   fi
 }
@@ -46,6 +63,7 @@ function backup_files () {
 # Pre-install check
 function do_preflight () {
   echo 'Doing preflight check...'
+  
   manifest=(~/.bashrc ~/.bash_profile)
   for file in ${manifest[@]}
   do
@@ -54,6 +72,17 @@ function do_preflight () {
       preflight_failed=1
     fi
   done
+  
+  if [[ $(pwd) != ~/.dotfiles && -d ~/.dotfiles ]]; then
+    # If the current directory is not ~/.dotfiles (Like it is when install is run from a tarball download),
+    # and if the ~/.dotfiles directory already exists,
+    # then we are likely in the case that the user has already run the install script once, or trying to update the dotfiles,
+    # or has his own .dotfiles directory, or already cloned the git repository.
+    echo ~/.dotfiles "already exists!"
+    echo "This installer cannot do updates. Please use Git to stay up-to-date."
+    echo "See readme.md for more information."
+    preflight_failed=1
+  fi
   
   if [[ $preflight_failed ]]; then
     echo 'Install aborted!'
@@ -66,19 +95,35 @@ function do_preflight () {
 
 # Local install
 function do_local_install () {
-  if [[ ! -d ~/bin ]]; then
-    echo "Creating ~/bin directory"
-    mkdir ~/bin
+    
+  if [[ ! -d ~/.dotfiles ]]; then
+    # If .dotfiles dir doesn't exists, we are likely running this script from a github tarball download.
+    # So we need first to copy files from this "Arko-dotfiles-GITHASH" dir to the proper ~/.dotfiles dir
+    echo "Creating ~/.dotfiles directory"
+    mkdir ~/.dotfiles
     if [[ $? -gt 0 ]]; then
-      exit_with_error 'Error creating ~/bin directory'
+      exit_with_error 'Error creating ~/.dotfiles directory'
+    fi
+    echo "Copying files in ~/.dotfiles"
+    cp -R * ~/.dotfiles
+    if [[ $? -gt 0 ]]; then
+      exit_with_error 'Error copying files in ~/.dotfiles directory'
     fi
   fi
+  
   if [[ $(uname -p) == 'i386' ]]; then # Verify that arch is intel, then copy vcprompt. TODO: compile vcprompt for ppc
+    if [[ ! -d ~/bin ]]; then
+      echo "Creating ~/bin directory"
+      mkdir ~/bin
+      if [[ $? -gt 0 ]]; then
+        exit_with_error 'Error creating ~/bin directory'
+      fi
+    fi
     if [[ -e ~/bin/vcprompt ]]; then
       echo 'Seems that vcprompt is already installed. Skipping'
     else
       echo 'Copying vcprompt binary to ~/bin'
-      cp bin/vcprompt ~/bin/vcprompt
+      cp ~/.dotfiles/bin/vcprompt ~/bin/vcprompt
       if [[ $? -gt 0 ]]; then
         exit_with_error 'Error copying vcprompt binary'
       fi
@@ -86,18 +131,22 @@ function do_local_install () {
   else
     echo "Arch is not i386. Skipping vcprompt install"
   fi
+  
   echo 'Symlinking .bash_profile'
   ln -s ~/.dotfiles/bash_profile ~/.bash_profile
   if [[ $? -gt 0 ]]; then
     exit_with_error 'Error symlinking .bash_profile'
   fi
+  
   echo 'Symlinking .bashrc'
   ln -s ~/.dotfiles/bashrc ~/.bashrc
   if [[ $? -gt 0 ]]; then
     exit_with_error 'Error symlinking .bashrc'
   fi
+  
   echo 'Dotfiles installed successfully!'
   echo 'To load your new environment, use this command: $ source ~/.bashrc'
+  echo 'Change prompt color with $ prompt_color'
 }
 
 function do_remote_install () {
@@ -110,7 +159,7 @@ function do_remote_install () {
 
 function exit_with_error () {
   echo $1
-  echo 'Install failed!'
+  echo -e 'Install failed!'
   exit 1
 }
 
