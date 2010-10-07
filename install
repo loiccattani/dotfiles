@@ -62,12 +62,14 @@ function do_local_backup () {
     fi
   fi
   
-  # Backup .dotfiles only if install is run from other directory
-  if [[ $(pwd) != ~/.dotfiles && -d ~/.dotfiles ]]; then
-    echo 'Moving ~/.dotfiles'
-    mv ~/.dotfiles $backup_dir
-    if [[ $? -gt 0 ]]; then
-      exit_with_error "Error moving ~/.dotfiles to ${backup_dir}"
+  # Backup .dotfiles only if install is run from other directory, Or if uninstalling
+  if [[ $(pwd) != ~/.dotfiles || $install_mode == 'uninstall' ]]; then
+    if [[ -d ~/.dotfiles ]]; then
+      echo 'Moving ~/.dotfiles'
+      mv ~/.dotfiles $backup_dir
+      if [[ $? -gt 0 ]]; then
+        exit_with_error "Error moving ~/.dotfiles to ${backup_dir}"
+      fi
     fi
   fi
   
@@ -174,7 +176,7 @@ function do_local_uninstall () {
   echo "Uninstalling"
   do_local_backup
   echo "`tput bold`Dotfiles were successfully uninstalled!`tput sgr0`"
-  #TODO: list files resting, and in case install was run from ~/.dotfile add a note about manually removing this directory
+  echo "Backup directories were left untouched (~/.dotfiles_backup_...)"
 }
 
 
