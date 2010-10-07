@@ -32,12 +32,12 @@ done
 # Force install / Backup files
 function do_local_backup () {
   timestamp=$(date +%s)
-  backup_dir=~/.dotfiles_bak_$timestamp
-  echo "Backuping. Files will be moved to ${backup_dir}"
+  backup_dir=~/.dotfiles_backup_$timestamp
+  echo "Existing files will be moved to ~/.dotfiles_backup_${timestamp}"
   
   # Create backup dir
   if [[ ! -d $backup_dir ]]; then
-    echo "Creating ${backup_dir} directory"
+    echo "Creating backup directory"
     mkdir $backup_dir
     if [[ $? -gt 0 ]]; then
       exit_with_error "Error creating ${backup_dir} directory"
@@ -46,7 +46,7 @@ function do_local_backup () {
   
   # Backup .bashrc
   if [[ -e ~/.bashrc ]]; then
-    echo 'Backuping ~/.bashrc'
+    echo 'Moving ~/.bashrc'
     mv ~/.bashrc $backup_dir
     if [[ $? -gt 0 ]]; then
       exit_with_error "Error moving ~/.bashrc to ${backup_dir}"
@@ -55,7 +55,7 @@ function do_local_backup () {
   
   # Backup .bash_profile
   if [[ -e ~/.bash_profile ]]; then
-    echo 'Backuping ~/.bash_profile'
+    echo 'Moving ~/.bash_profile'
     mv ~/.bash_profile $backup_dir
     if [[ $? -gt 0 ]]; then
       exit_with_error "Error moving ~/.bash_profile to ${backup_dir}"
@@ -64,12 +64,14 @@ function do_local_backup () {
   
   # Backup .dotfiles only if install is run from other directory
   if [[ $(pwd) != ~/.dotfiles && -d ~/.dotfiles ]]; then
-    echo 'Backuping ~/.dotfiles'
+    echo 'Moving ~/.dotfiles'
     mv ~/.dotfiles $backup_dir
     if [[ $? -gt 0 ]]; then
       exit_with_error "Error moving ~/.dotfiles to ${backup_dir}"
     fi
   fi
+  
+  echo "Backup completed"
 }
 
 # Pre-install check
@@ -90,14 +92,14 @@ function do_local_preflight () {
     # and if the ~/.dotfiles directory already exists,
     # then we are likely in the case that the user has already run the install script once, or trying to update the dotfiles,
     # or has his own .dotfiles directory, or already cloned the git repository.
-    echo ~/.dotfiles "already exists!"
+    echo ~/.dotfiles "exists!"
     echo "This installer cannot do updates. Please use Git to stay up-to-date."
     echo "See readme.md for more information."
     preflight_failed=1
   fi
   
   if [[ $preflight_failed ]]; then
-    echo 'Install aborted!'
+    echo "`tput bold`Install aborted!`tput sgr0`"
     echo 'Use ./install -f to force install. Old files will be backuped.'
     return 1
   else
@@ -116,7 +118,7 @@ function do_local_install () {
     if [[ $? -gt 0 ]]; then
       exit_with_error 'Error creating ~/.dotfiles directory'
     fi
-    echo "Copying files in ~/.dotfiles"
+    echo "Copying files to ~/.dotfiles"
     cp -R * ~/.dotfiles
     if [[ $? -gt 0 ]]; then
       exit_with_error 'Error copying files in ~/.dotfiles directory'
@@ -141,7 +143,7 @@ function do_local_install () {
       fi
     fi
   else
-    echo "Arch is not i386. Skipping vcprompt install"
+    echo "Arch is not i386: skipping vcprompt copy"
   fi
   
   echo 'Symlinking .bash_profile'
@@ -156,9 +158,9 @@ function do_local_install () {
     exit_with_error 'Error symlinking .bashrc'
   fi
   
-  echo 'Dotfiles installed successfully!'
-  echo 'To load your new environment, use this command: $ source ~/.bashrc'
-  echo 'Change prompt color with $ prompt_color'
+  echo "`tput bold`Dotfiles successfully installed!`tput sgr0`"
+  echo "To load your new environment, use: $ `tput bold`source ~/.bashrc`tput sgr0`"
+  echo "You may also want to change prompt's color with: $ prompt_color"
 }
 
 function do_remote_install () {
@@ -168,9 +170,17 @@ function do_remote_install () {
   echo "Not implemented yet"
 }
 
+function do_local_uninstall () {
+  echo "Uninstalling"
+  do_local_backup
+  echo "`tput bold`Dotfiles were successfully uninstalled!`tput sgr0`"
+  #TODO: list files resting, and in case install was run from ~/.dotfile add a note about manually removing this directory
+}
+
+
 function exit_with_error () {
   echo $1
-  echo -e 'Install failed!'
+  echo -e "`tput bold`Install failed!`tput sgr0`"
   exit 1
 }
 
@@ -188,6 +198,7 @@ case $install_mode in
     else
       # Local install
       if [[ $force_install -eq 1 ]]; then
+        echo "Force install, backuping first"
         do_local_backup
       fi
       do_local_preflight
@@ -202,7 +213,7 @@ case $install_mode in
       do_remote_backup
     else
       # Local uninstall
-      do_local_backup
+      do_local_uninstall
     fi
   ;;
 esac
