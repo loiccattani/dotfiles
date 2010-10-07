@@ -1,27 +1,39 @@
 #!/bin/bash
-# Dotfiles install script
+# Arko's dotfiles install script
 
-# Use this script to install the dotfiles either locally (default) or remotely to the given user and host.
+# Use this script to install or uninstall the dotfiles either locally (default) or remotely to the given user and host.
 
 # Synopsis
-# install [-R [user@]host]
+# install [-f | -u]
+# install -R [user@]host [-f | -u]
 
-install_mode='local'
+install_mode='install' # Default install mode
 
-while getopts "fR:" Option
+function show_usage () {
+  echo "Usage: `basename $0` [options]"
+  echo
+  echo "    -f              Force install by backuping old files first"
+  echo "    -h              Show this help"
+  echo "    -R [user@]host  Do a remote install or uninstall"
+  echo "    -u              Uninstall (backup) all files"
+}
+
+while getopts "fhR:u" Option
 do
   case $Option in
-    f ) force_install=1;; # Force install. (Do a backup of 'old' files before install)
-    R ) install_mode='remote'; remote_host=$OPTARG;; # Specify remote user and host
-    * ) echo "Usage: `basename $0` [-R [user@]host]";; # DEFAULT
+    f ) force_install=1;;
+    h ) show_usage; exit 0;;
+    R ) remote_host=$OPTARG;;
+    u ) install_mode='uninstall';;
+    * ) show_usage; exit 1;;
   esac
 done
 
 # Force install / Backup files
-function backup_files () {
+function do_local_backup () {
   timestamp=$(date +%s)
   backup_dir=~/.dotfiles_bak_$timestamp
-  echo "Force install. Old files will be moved to ${backup_dir}"
+  echo "Backuping. Files will be moved to ${backup_dir}"
   
   # Create backup dir
   if [[ ! -d $backup_dir ]]; then
@@ -61,7 +73,7 @@ function backup_files () {
 }
 
 # Pre-install check
-function do_preflight () {
+function do_local_preflight () {
   echo 'Doing preflight check...'
   
   manifest=(~/.bashrc ~/.bash_profile)
@@ -156,7 +168,6 @@ function do_remote_install () {
   echo "Not implemented yet"
 }
 
-
 function exit_with_error () {
   echo $1
   echo -e 'Install failed!'
@@ -166,21 +177,33 @@ function exit_with_error () {
 # - - - - - - - - - - -
 
 case $install_mode in
-  'local' )
-    if [[ $force_install -eq 1 ]]; then
-      backup_files
-    fi
-    do_preflight
-    if [[ $? -eq 0 ]]; then
-      do_local_install
+  'install' )
+    if [[ $remote_host ]]; then
+      # Remote install
+      # if [[ $force_install -eq 1 ]]; then
+      #   TODO: do_remote_backup
+      # fi
+      # TODO: do_remote_prefilght
+      do_remote_install
+    else
+      # Local install
+      if [[ $force_install -eq 1 ]]; then
+        do_local_backup
+      fi
+      do_local_preflight
+      if [[ $? -eq 0 ]]; then
+        do_local_install
+      fi
     fi
   ;;
-  'remote' )
-    # if [[ $force_install -eq 1 ]]; then
-    #   TODO: backup_remote_files
-    # fi
-    # TODO: do_remote_prefilght
-    do_remote_install
+  'uninstall' )
+    if [[ $remote_host ]]; then
+      # Remote uninstall
+      do_remote_backup
+    else
+      # Local uninstall
+      do_local_backup
+    fi
   ;;
 esac
 
