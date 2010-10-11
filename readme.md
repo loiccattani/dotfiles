@@ -18,3 +18,13 @@ Or, if you don't have git, you can just download the latest source as a tarball:
 Finally, change to the cloned or extracted dotfiles directory and run install
 
     ./install
+
+## What will happen?
+
+Whether you use `git clone` or the tarball download, running the install script will:
+
+1. Check for conflicting files and offer to safely backup them.
+2. Create the ~/.dotfiles directory, if needed
+3. Copy all dotfiles to ~/.dotfiles, if needed
+4. Symlink ~/.dotfiles/bashrc to ~/.bashrc
+5. Symlink ~/.dotfiles/bash\_profile to ~/.bash\_profile
