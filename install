@@ -173,7 +173,7 @@ function do_install () {
   fi
   
   echo "`tput bold`Dotfiles successfully installed!`tput sgr0`"
-  echo "To load your new environment, use: $ `tput bold`source ~/.bashrc`tput sgr0`"
+  echo "To load your new environment, use: $ `tput rev`source ~/.bashrc`tput sgr0`"
   echo "You may also want to change prompt's color with: $ prompt_color"
 }
 
