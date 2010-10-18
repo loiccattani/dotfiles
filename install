@@ -27,7 +27,7 @@ do
 done
 
 # Force install / Backup files
-function do_local_backup () {
+function do_backup () {
   timestamp=$(date +%s)
   backup_dir=~/.dotfiles_backup_$timestamp
   echo "Existing files will be moved to ~/.dotfiles_backup_${timestamp}"
@@ -74,7 +74,7 @@ function do_local_backup () {
 }
 
 # Pre-install check
-function do_local_preflight () {
+function do_preflight () {
   echo 'Doing preflight check...'
   
   manifest=(~/.bashrc ~/.bash_profile)
@@ -106,8 +106,8 @@ function do_local_preflight () {
   fi
 }
 
-# Local install
-function do_local_install () {
+# Install
+function do_install () {
     
   if [[ ! -d ~/.dotfiles ]]; then
     # If .dotfiles dir doesn't exists, we are likely running this script from a github tarball download.
@@ -163,9 +163,9 @@ function do_local_install () {
 }
 
 
-function do_local_uninstall () {
+function do_uninstall () {
   echo "Uninstalling"
-  do_local_backup
+  do_backup
   echo "`tput bold`Dotfiles were successfully uninstalled!`tput sgr0`"
   echo "Backup directories were left untouched (~/.dotfiles_backup_...)"
 }
@@ -180,19 +180,17 @@ function exit_with_error () {
 
 case $install_mode in
   'install' )
-    # Local install
     if [[ $force_install -eq 1 ]]; then
       echo "Force install, backuping first"
-      do_local_backup
+      do_backup
     fi
-    do_local_preflight
+    do_preflight
     if [[ $? -eq 0 ]]; then
-      do_local_install
+      do_install
     fi
   ;;
   'uninstall' )
-    # Local uninstall
-    do_local_uninstall
+    do_uninstall
   ;;
 esac
 
