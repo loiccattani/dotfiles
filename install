@@ -59,6 +59,15 @@ function do_local_backup () {
     fi
   fi
   
+  # Backup .nanorc
+  if [[ -e ~/.nanorc ]]; then
+    echo 'Moving ~/.nanorc'
+    mv ~/.nanorc $backup_dir
+    if [[ $? -gt 0 ]]; then
+      exit_with_error "Error moving ~/.nanorc to ${backup_dir}"
+    fi
+  fi
+  
   # Backup .dotfiles only if install is run from other directory, Or if uninstalling
   if [[ $(pwd) != ~/.dotfiles || $install_mode == 'uninstall' ]]; then
     if [[ -d ~/.dotfiles ]]; then
@@ -77,7 +86,7 @@ function do_local_backup () {
 function do_local_preflight () {
   echo 'Doing preflight check...'
   
-  manifest=(~/.bashrc ~/.bash_profile)
+  manifest=(~/.bashrc ~/.bash_profile ~/.nanorc)
   for file in ${manifest[@]}
   do
     if [[ -e $file ]]; then
@@ -155,6 +164,12 @@ function do_local_install () {
   ln -s ~/.dotfiles/bashrc ~/.bashrc
   if [[ $? -gt 0 ]]; then
     exit_with_error 'Error symlinking .bashrc'
+  fi
+  
+  echo 'Symlinking .nanorc'
+  ln -s ~/.dotfiles/nanorc ~/.nanorc
+  if [[ $? -gt 0 ]]; then
+    exit_with_error 'Error symlinking .nanorc'
   fi
   
   echo "`tput bold`Dotfiles successfully installed!`tput sgr0`"
