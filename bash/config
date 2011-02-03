@@ -53,14 +53,14 @@ if [[ -e ~/bin/vcprompt ]]; then # If vcprompt is installed, add it to the promp
   # 3: Colored prompt with VCS/Branch information
   prompt[3]="\[$prompt_color\]\u@\h:\W \[$YELLOW\]\$(vcprompt)\[$NO_COLOR\] \n\$ "
   # 4: Colored prompt with VCS/Branch information. Blank line before.
-  prompt[4]="\n\[$prompt_color\]\u@\h:\W \[$YELLOW\]\$(vcprompt)\[$NO_COLOR\] \n\$ "
+  prompt[4]="\[$YELLOW\]\$(vcprompt)\[$prompt_color\]\u@\h:\W\[$NO_COLOR\] \$ "
 else
   # 3: Colored prompt
   prompt[3]="\[$prompt_color\]\u@\h:\W \[$NO_COLOR\] \n\$ "
   # 4: Colored prompt. Blank line before.
   prompt[4]="\n\[$prompt_color\]\u@\h:\W \[$NO_COLOR\] \n\$ "
 fi
-default_prompt=3
+default_prompt=4
 
 # Set prompt
 if [[ -z $current_ps1 ]]; then
