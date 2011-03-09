@@ -8,7 +8,7 @@ My dotfiles.
 
 If you want to stay up to date with the very latest code, clone the git repository:
 
-    git clone git@github.com:Arko/dotfiles.git ~/.dotfiles
+    git clone git://github.com/Arko/dotfiles.git ~/.dotfiles
 
 Or, if you don't have git, you can just download the latest source as a tarball:
 
