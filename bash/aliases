@@ -45,11 +45,15 @@ alias ll='ls -laGh'
 alias ..='cd ..'
 
 # Rails
-alias ss='./script/server'
-alias sg='./script/generate'
-alias sc='./script/console'
-alias r='rake'
-alias rmig='rake db:migrate'
+alias r='rails'
+function rt () {
+  rake test
+  if [ $? == 0 ]; then
+    echo "$(tput setaf 2)Passed$(tput setaf 9)"
+  else
+    echo "$(tput setaf 1)Failed$(tput setaf 9)"
+  fi
+}
 
 # Dev prompt toggle. Toggles between standard PS1 and a colored, VCS aware prompt.
 function devp () {
