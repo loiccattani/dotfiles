@@ -5,6 +5,8 @@ export PATH="/usr/local/git/bin:$PATH" # Git
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # User-installed binaries
 export PATH="~/bin:$PATH" # User binaries
 
+export NODE_PATH=/usr/local/lib/node_modules
+
 export EDITOR='nano'
 
 # Source local env override if existing
