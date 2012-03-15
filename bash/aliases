@@ -43,6 +43,7 @@ alias gi='git add -i'
 alias l='ls -la'
 alias ll='ls -laGh'
 alias ..='cd ..'
+alias cw='cd ~/work'
 
 # Rails
 alias r='rails'
