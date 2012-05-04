@@ -56,6 +56,20 @@ function rt () {
   fi
 }
 
+# Web dev
+# From: http://paulirish.com/2012/talk-tooling-the-webapp-development-stack/
+
+# usage:
+# $ chrome index.html
+function chrome() {
+    open $@ --args --allow-file-access-from-files
+}
+
+# usage:
+# $ server
+alias server='open http://localhost:8000 && python -m SimpleHTTPServer'
+
+
 # Dev prompt toggle. Toggles between standard PS1 and a colored, VCS aware prompt.
 function devp () {
   prompts=${#prompt[@]}
