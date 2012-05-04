@@ -72,3 +72,6 @@ PS1=${prompt[$current_ps1]}
 if [[ -e ~/.dotfiles/bash/config.local ]]; then
   source ~/.dotfiles/bash/config.local
 fi
+
+# Load RVM into a shell session *as a function*
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
