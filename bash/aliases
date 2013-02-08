@@ -36,6 +36,7 @@ alias gco='git checkout'
 alias gl='git pull'
 alias gp='git push'
 alias gd='git diff'
+alias gdt='git difftool'
 alias gdm='git diff master'
 alias gi='git add -i'
 

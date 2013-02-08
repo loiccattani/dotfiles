@@ -5,10 +5,13 @@ export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # User-installed binaries
 export PATH="~/bin:$PATH" # User binaries
 export PATH="/usr/local/share/npm/bin:$PATH" # npm-installed binaries
 export PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+export PATH=$PATH:/Applications/Server.app/Contents/ServerRoot/usr/libexec
 
 export NODE_PATH=/usr/local/lib/node_modules
 
 export EDITOR='nano'
+
+export LC_CTYPE="utf-8"
 
 # Source local env override if existing
 if [[ -e ~/.dotfiles/bash/env.local ]]; then
