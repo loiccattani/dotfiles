@@ -3,6 +3,7 @@ export PATH="/usr/local/apache2/bin:$PATH" # Apache
 export PATH="/usr/local/git/bin:$PATH" # Git
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # User-installed binaries
 export PATH="~/bin:$PATH" # User binaries
+export PATH="bin:$PATH" # App binaries
 export PATH="/usr/local/share/npm/bin:$PATH" # npm-installed binaries
 export PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 export PATH=$PATH:/Applications/Server.app/Contents/ServerRoot/usr/libexec
